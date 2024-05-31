@@ -4,15 +4,16 @@ namespace Alura\Pdo\Infraestructure\Repository;
 
 use Alura\Pdo\Domain\Model\Student;
 use Alura\Pdo\Domain\Repository\StudentRepository;
-use Alura\Pdo\Infraestructure\Persistence\ConnectionCreator;
+use PDO;
+
 
 class PdoStudentRepository implements StudentRepository
 {
-    private \PDO $connection;
+    private PDO $connection;
 
-    public function __construct()
+    public function __construct(PDO $connection)
     {
-        $this->connection = ConnectionCreator::Connection();
+        $this->connection = $connection;
     }
 
     // Busca todos os Alunos cadastrados
@@ -38,7 +39,7 @@ class PdoStudentRepository implements StudentRepository
     // Transfere informações da camada do Database para a camada de Negócios
     private function hydrateStudentList(\PDOStatement $stmt): array
     {
-        $studentDataList = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $studentDataList = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $studentList = [];
 
         foreach ($studentDataList as $studentData) {
@@ -88,7 +89,7 @@ class PdoStudentRepository implements StudentRepository
         $stmt = $this->connection->prepare($qry);
         $stmt->bindValue(':name', $student->name());
         $stmt->bindValue(':birthDate', $student->birthDate()->format('Y-m-d'));
-        $stmt->bindValue(':id', $student->id(), \PDO::PARAM_INT);
+        $stmt->bindValue(':id', $student->id(), PDO::PARAM_INT);
         
         return $stmt->execute();
     }
@@ -97,7 +98,7 @@ class PdoStudentRepository implements StudentRepository
     public function remove(Student $student): bool
     {
         $stmt = $this->connection->prepare('DELETE FROM SA0010 WHERE ID = ?');
-        $stmt->bindValue(1, $student->id(), \PDO::PARAM_INT);
+        $stmt->bindValue(1, $student->id(), PDO::PARAM_INT);
 
         return $stmt->execute();        
     }
