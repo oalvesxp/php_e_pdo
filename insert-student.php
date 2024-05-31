@@ -1,26 +1,24 @@
 <?php
 
 use Alura\Pdo\Domain\Model\Student;
+use Alura\Pdo\Infraestructure\Persistence\ConnectionCreator;
+use Alura\Pdo\Infraestructure\Repository\PdoStudentRepository;
+
 require_once 'vendor/autoload.php';
 
-$pdo = \Alura\Pdo\Infraestructure\Persistence\ConnectionCreator::Connection();
+$connection = ConnectionCreator::Connection();
+$studentRepository = new PdoStudentRepository($connection);
 
+// Reservando a transação
+$connection->beginTransaction();
+
+// Cadastrando novo Aluno
 $student = new Student(
     null,
-    'Lucas V. Almeida',
-    new \DateTimeImmutable('1993-08-03')
+    'Wellington C. Santos',
+    new \DateTimeImmutable('1997-04-02')
 );
 
-// Problemas de segurança
-//$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES ('{$student->name()}', '{$student->birthDate()->format('Y-m-d')}')";
+$studentRepository->save($student);
 
-// Evitando SQL Injection 
-$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES (?, ?)";
-
-$statement = $pdo->prepare($qry1);
-$statement->bindValue(1, $student->name());
-$statement->bindValue(2, $student->birthDate()->format('Y-m-d'));
-
-if ($statement->execute()) {
-    echo "Aluno cadastrado com sucesso!";
-}
+$connection->commit();
