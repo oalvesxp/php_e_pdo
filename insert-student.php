@@ -8,10 +8,20 @@ $pdo = new PDO(dsn: 'sqlite:' . $dir);
 
 $student = new Student(
     null,
-    'Larissa M. Santo',
-    new \DateTimeImmutable('1996-06-17')
+    'Lucas V. Almeida',
+    new \DateTimeImmutable('1993-08-03')
 );
 
-$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES ('{$student->name()}', '{$student->birthDate()->format('Y-m-d')}')";
+// Problemas de segurança
+//$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES ('{$student->name()}', '{$student->birthDate()->format('Y-m-d')}')";
 
-$pdo->exec($qry1);
+// Evitando SQL Injection 
+$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES (?, ?)";
+
+$statement = $pdo->prepare($qry1);
+$statement->bindValue(1, $student->name());
+$statement->bindValue(2, $student->birthDate()->format('Y-m-d'));
+
+if ($statement->execute()) {
+    echo "Aluno cadastrado com sucesso!";
+}
