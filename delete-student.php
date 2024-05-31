@@ -2,8 +2,6 @@
 
 require_once 'vendor/autoload.php';
 
-$pdo = \Alura\Pdo\Infraestructure\Persistence\ConnectionCreator::Connection();
-
 // Passando a query pelo proprio 'prepare', agilizando o processo de condificação
 // Utilizando bind de valor por campo nomeado ':value'
 // Definindo o tipo de valor do bindValue, PDO::PARAM_TYPE

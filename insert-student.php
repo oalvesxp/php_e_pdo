@@ -12,13 +12,18 @@ $studentRepository = new PdoStudentRepository($connection);
 // Reservando a transação
 $connection->beginTransaction();
 
-// Cadastrando novo Aluno
-$student = new Student(
-    null,
-    'Wellington C. Santos',
-    new \DateTimeImmutable('1997-04-02')
-);
+try{
+    // Cadastrando novo Aluno
+    $student = new Student(
+        null,
+        'Fernando H. Carvalho',
+        new \DateTimeImmutable('1993-09-21')
+    );
 
-$studentRepository->save($student);
+    $studentRepository->save($student);
+    $connection->commit();
 
-$connection->commit();
+} catch (\PDOException $e) {
+    $connection->rollBack();
+    echo $e->getMessage();
+}
