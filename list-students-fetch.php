@@ -3,8 +3,7 @@
 use Alura\Pdo\Domain\Model\Student;
 require_once 'vendor/autoload.php';
 
-$dir = __DIR__ . '/BASE.sqlite';
-$pdo = new PDO(dsn: 'sqlite:' . $dir);
+$pdo = \Alura\Pdo\Infraestructure\Persistence\ConnectionCreator::Connection();
 
 // Buscando estudantes cadastrados
 $statement = $pdo->query('SELECT * FROM SA0010');

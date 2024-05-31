@@ -2,8 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-$dir = __DIR__ . '/BASE.sqlite';
-$pdo = new PDO(dsn: 'sqlite:' . $dir);
+$pdo = \Alura\Pdo\Infraestructure\Persistence\ConnectionCreator::Connection();
 
 // Passando a query pelo proprio 'prepare', agilizando o processo de condificação
 // Utilizando bind de valor por campo nomeado ':value'
