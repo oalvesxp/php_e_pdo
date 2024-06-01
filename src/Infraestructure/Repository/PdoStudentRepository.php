@@ -131,19 +131,18 @@ class PdoStudentRepository implements StudentRepository
     /** Cria lista de Alunos e adiciona os Telefones */
     public function studentsWithPhones(): array
     {
-        $qry = '
-            SELECT SA0.SA0_ID
-                , SA0.SA0_NAME
-                , SA0.SA0_NASC
-                , SB0.SB0_ID
-                , SB0.SB0_ACOD
-                , SB0.SB0_NUM
-            FROM SA0010 AS SA0
-            INNER JOIN SB0010 AS SB0 ON
-                SA0.SA0_ID = SB0.SB0_SID
+        $qry = 'SELECT SA0.SA0_ID
+                    , SA0.SA0_NAME
+                    , SA0.SA0_NASC
+                    , SB0.SB0_ID
+                    , SB0.SB0_ACOD
+                    , SB0.SB0_NUM
+                FROM SA0010 AS SA0
+                    INNER JOIN SB0010 AS SB0 ON
+                        SA0.SA0_ID = SB0.SB0_SID
         ';
         
-        $stmt = $this->connection->prepare($qry);
+        $stmt = $this->connection->query($qry);
         $result = $stmt->fetchAll();
         $studentList = [];
 
@@ -162,7 +161,7 @@ class PdoStudentRepository implements StudentRepository
                 $row['SB0_NUM']
             );
 
-            $studentList[$row['SA0_ID']->addPhone($phone)];
+            $studentList[$row['SA0_ID']]->addPhone($phone);
         }
 
         return $studentList;
