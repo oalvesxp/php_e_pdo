@@ -44,20 +44,18 @@ class PdoStudentRepository implements StudentRepository
         $studentList = [];
 
         foreach ($studentDataList as $studentData) {
-            $student = new Student(
+            $studentList[] = new Student(
                 $studentData['SA0_ID'],
                 $studentData['SA0_NAME'],
                 new \DateTimeImmutable($studentData['SA0_NASC'])
             );
-
-            $this->fillPhonesOf($student);
-            $studentList[] = $student;
         }
 
         return $studentList;
     }
 
-    /** Filtra telefones do Aluno */
+    /** Problema de performance SQL (n + 1)
+    -- Filtra telefones do Aluno 
     private function fillPhonesOf(Student $student): void
     {
        $qry = 'SELECT SB0_ID, SB0_ACOD, SB0_NUM FROM SB0010 WHERE SB0_SID = ?';
@@ -78,6 +76,7 @@ class PdoStudentRepository implements StudentRepository
        }
 
     }
+    */
 
     /** Adiciona ou atualiza cadastro de Aluno */
     public function save(Student $student): bool
