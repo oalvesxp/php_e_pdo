@@ -1,17 +1,29 @@
 <?php
 
 use Alura\Pdo\Domain\Model\Student;
+use Alura\Pdo\Infraestructure\Persistence\ConnectionCreator;
+use Alura\Pdo\Infraestructure\Repository\PdoStudentRepository;
+
 require_once 'vendor/autoload.php';
 
-$dir = __DIR__ . '/BASE.sqlite';
-$pdo = new PDO(dsn: 'sqlite:' . $dir);
+$connection = ConnectionCreator::Connection();
+$studentRepository = new PdoStudentRepository($connection);
 
-$student = new Student(
-    null,
-    'Larissa M. Santo',
-    new \DateTimeImmutable('1996-06-17')
-);
+// Reservando a transação
+$connection->beginTransaction();
 
-$qry1 = "INSERT INTO SA0010 (SA0_NAME, SA0_NASC) VALUES ('{$student->name()}', '{$student->birthDate()->format('Y-m-d')}')";
+try{
+    // Cadastrando novo Aluno
+    $student = new Student(
+        null,
+        'Natália M. Batista',
+        new \DateTimeImmutable('1986-09-10')
+    );
 
-$pdo->exec($qry1);
+    $studentRepository->save($student);
+    $connection->commit();
+
+} catch (\PDOException $e) {
+    $connection->rollBack();
+    echo $e->getMessage();
+}
