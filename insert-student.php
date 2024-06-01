@@ -16,8 +16,8 @@ try{
     // Cadastrando novo Aluno
     $student = new Student(
         null,
-        'Fernando H. Carvalho',
-        new \DateTimeImmutable('1993-09-21')
+        'Natália M. Batista',
+        new \DateTimeImmutable('1986-09-10')
     );
 
     $studentRepository->save($student);
