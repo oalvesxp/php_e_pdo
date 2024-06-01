@@ -4,11 +4,15 @@ namespace Alura\Pdo\Domain\Model;
 
 class Student 
 {
+    /** Declarando Variáveis */
     private ?int $id;
     private string $name;
     private \DateTimeInterface $birthDate;
 
-    // Construtor
+    /** @var Phone[] */
+    private array $phones = [];
+
+    /** Construtor da Class Aluno */
     public function __construct(?int $id, string $name, \DateTimeInterface $birthDate)
     {
         $this->id = $id;
@@ -16,7 +20,7 @@ class Student
         $this->birthDate = $birthDate;
     }
 
-    // Se o Aluno for criado sem ID
+    /** Verifica se o Aluno já possui um ID */
     public function defineId(int $id): void
     {
         if (!is_null($this->id)) {
@@ -36,7 +40,7 @@ class Student
         return $this->name;
     }
 
-    // Atualiza o Nome cadastrado
+    /** Atualiza o Nome do Aluno */
     public function changeName(string $newName): void
     {
         $this->name = $newName;
@@ -47,11 +51,22 @@ class Student
         return $this->birthDate;
     }
 
-    // Calcula Idade
+    /** Calcula Idade */
     public function age(): int
     {
         return $this->birthDate
             ->diff(new \DateTimeImmutable())
             ->y;
+    }
+
+    public function addPhone(Phone $phone): void 
+    {
+        $this->phones[] = $phone;    
+    }
+
+    /** @return Phone[] */
+    public function phones(): array 
+    {
+        return $this->phones;
     }
 }
